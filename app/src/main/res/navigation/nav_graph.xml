@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.rohitthebest.quizzed_aquizapp.ui.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_chooseCategoryFragment"
+            app:destination="@id/chooseCategoryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_quizFragment"
+            app:destination="@id/quizFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_customQuizFragment"
+            app:destination="@id/customQuizFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseCategoryFragment"
+        android:name="com.rohitthebest.quizzed_aquizapp.ui.fragments.ChooseCategoryFragment"
+        android:label="fragment_category_choose"
+        tools:layout="@layout/fragment_category_choose" >
+        <action
+            android:id="@+id/action_chooseCategoryFragment_to_quizFragment"
+            app:destination="@id/quizFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.rohitthebest.quizzed_aquizapp.ui.fragments.QuizFragment"
+        android:label="fragment_quiz"
+        tools:layout="@layout/fragment_quiz" />
+    <fragment
+        android:id="@+id/customQuizFragment"
+        android:name="com.rohitthebest.quizzed_aquizapp.ui.fragments.CustomQuizFragment"
+        android:label="fragment_custom_quiz"
+        tools:layout="@layout/fragment_custom_quiz" >
+        <action
+            android:id="@+id/action_customQuizFragment_to_quizFragment"
+            app:destination="@id/quizFragment" />
+    </fragment>
+</navigation>
