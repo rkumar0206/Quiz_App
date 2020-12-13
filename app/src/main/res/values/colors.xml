@@ -12,4 +12,5 @@
     <color name="divider_color">#C4C4C4</color>
     <color name="primary_text_color">#212121</color>
     <color name="button_color">#F07858</color>
+    <color name="color_of_star">#F4FFEC41</color>
 </resources>
