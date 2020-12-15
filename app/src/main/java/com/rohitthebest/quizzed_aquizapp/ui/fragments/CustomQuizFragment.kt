@@ -8,11 +8,19 @@ import com.rohitthebest.quizzed_aquizapp.databinding.FragmentCustomQuizBinding
 
 class CustomQuizFragment : Fragment(R.layout.fragment_custom_quiz) {
 
-    private lateinit var binding : FragmentCustomQuizBinding
+    private var _binding: FragmentCustomQuizBinding? = null
+    private val binding get() = _binding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = FragmentCustomQuizBinding.bind(view)
+        _binding = FragmentCustomQuizBinding.bind(view)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        _binding = null
+
     }
 }

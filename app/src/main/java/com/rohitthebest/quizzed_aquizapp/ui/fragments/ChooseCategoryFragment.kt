@@ -8,11 +8,18 @@ import com.rohitthebest.quizzed_aquizapp.databinding.FragmentCategoryChooseBindi
 
 class ChooseCategoryFragment : Fragment(R.layout.fragment_category_choose) {
 
-    private lateinit var binding : FragmentCategoryChooseBinding
+    private var _binding: FragmentCategoryChooseBinding? = null
+    private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = FragmentCategoryChooseBinding.bind(view)
+        _binding = FragmentCategoryChooseBinding.bind(view)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        _binding = null
     }
 }
