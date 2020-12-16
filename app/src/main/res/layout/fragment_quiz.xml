@@ -7,10 +7,11 @@
     tools:context=".ui.fragments.QuizFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pleaseWaitCL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background_color"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -49,15 +50,17 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/questionCL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background_color"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView4"
@@ -99,7 +102,7 @@
 
 
                 <TextView
-                    android:id="@+id/textView7"
+                    android:id="@+id/questionNumberTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -112,7 +115,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/scoreTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -120,20 +123,22 @@
                     android:text="Score : 0"
                     android:textColor="@color/primary_text_color"
                     android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView7"
+                    app:layout_constraintBottom_toBottomOf="@+id/questionNumberTV"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textView7" />
+                    app:layout_constraintTop_toTopOf="@+id/questionNumberTV" />
 
                 <View
                     android:id="@+id/divider2"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?android:attr/listDivider"
-                    app:layout_constraintTop_toBottomOf="@+id/textView7"
-                    tools:layout_editor_absoluteX="4dp" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/questionNumberTV" />
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView5"
+                    android:id="@+id/saveBtn"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -170,9 +175,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cardView5" />
+                    app:layout_constraintTop_toTopOf="@+id/saveBtn" />
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/nextBtn"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -199,13 +205,13 @@
                     android:layout_height="1dp"
                     android:layout_marginBottom="5dp"
                     android:background="?android:attr/listDivider"
-                    app:layout_constraintBottom_toTopOf="@+id/cardView5"
+                    app:layout_constraintBottom_toTopOf="@+id/saveBtn"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView10"
+                    android:id="@+id/questionTV"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="5dp"
@@ -227,32 +233,27 @@
 
         </androidx.cardview.widget.CardView>
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/cardView7"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/starBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView6">
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:fillViewport="true"
-                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-                <include layout="@layout/options_layout" />
+            <include
+                android:id="@+id/include_option"
+                layout="@layout/options_layout" />
 
-            </androidx.core.widget.NestedScrollView>
-
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </LinearLayout>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView7"
+            android:id="@+id/backBtn"
             android:layout_width="80dp"
             android:layout_height="50dp"
             app:cardBackgroundColor="@color/button_color"
@@ -276,14 +277,26 @@
         </androidx.cardview.widget.CardView>
 
         <ImageView
-            android:id="@+id/imageButton"
+            android:id="@+id/starBtn"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="5dp"
             android:backgroundTint="@android:color/transparent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/numberOfStarTV"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_baseline_star_24" />
+
+        <TextView
+            android:id="@+id/numberOfStarTV"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:padding="2dp"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/starBtn"
+            app:layout_constraintStart_toStartOf="@+id/starBtn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

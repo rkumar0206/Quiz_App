@@ -1,12 +1,10 @@
 package com.rohitthebest.quizzed_aquizapp.ui
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.rohitthebest.quizzed_aquizapp.databinding.ActivityMainBinding
 import com.rohitthebest.quizzed_aquizapp.module.QuizApiViewModel
-import com.rohitthebest.quizzed_aquizapp.remote.Responses
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         //getApiResponse()
     }
 
-    /*private fun getApiResponse() {
+    private fun getApiResponse() {
 
         val queryMap = HashMap<String, String>()
         queryMap["amount"] = 10.toString()
@@ -40,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.quiz.observe(this) {
 
 
+/*
             when (it) {
 
                 is Responses.Loading -> {
@@ -62,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "${it.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+*/
         }
-    }*/
+    }
 }

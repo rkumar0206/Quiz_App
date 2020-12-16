@@ -4,9 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.rohitthebest.helperClasses.CustomQuizParameters
+import com.rohitthebest.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.R
 import com.rohitthebest.quizzed_aquizapp.databinding.FragmentHomeBinding
 import com.rohitthebest.quizzed_aquizapp.databinding.HomeLayoutBinding
+import com.rohitthebest.quizzed_aquizapp.util.CheckNetworkConnection.isInternetAvailable
+import com.rohitthebest.quizzed_aquizapp.util.Functions.Companion.showNoInternetMessage
+import com.rohitthebest.quizzed_aquizapp.util.GsonConverters.Companion.convertCustomQuizParameterToString
 
 class HomeFragment : Fragment(R.layout.fragment_home), View.OnClickListener {
 
@@ -37,7 +42,21 @@ class HomeFragment : Fragment(R.layout.fragment_home), View.OnClickListener {
 
             includeBinding.startQuizOption.id -> {
 
-                findNavController().navigate(R.id.action_homeFragment_to_quizFragment)
+                if (isInternetAvailable(requireContext())) {
+
+                    val action = HomeFragmentDirections.actionHomeFragmentToQuizFragment(
+                        convertCustomQuizParameterToString(
+                            CustomQuizParameters(
+                                Type.ANY
+                            )
+                        )
+                    )
+
+                    findNavController().navigate(action)
+                } else {
+
+                    showNoInternetMessage(requireContext())
+                }
             }
 
             includeBinding.chooseCategoryOption.id -> {
