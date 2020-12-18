@@ -16,6 +16,7 @@ import com.rohitthebest.quizzed_aquizapp.databinding.OptionsLayoutBinding
 import com.rohitthebest.quizzed_aquizapp.module.QuizApiViewModel
 import com.rohitthebest.quizzed_aquizapp.remote.Responses
 import com.rohitthebest.quizzed_aquizapp.remote.model.Result
+import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.changeColor
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.disable
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.enable
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.hide
@@ -59,7 +60,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
         questionList = ArrayList()
 
-        binding.progressBar.max = 30000
+        binding.progressBar.max = 31000
 
         disableNextButton()
 
@@ -355,13 +356,38 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
     private fun setTimer() {
 
-        timer = object : CountDownTimer(30000, 1000) {
+        timer = object : CountDownTimer(31000, 100) {
 
             override fun onTick(millisUntilFinished: Long) {
 
+                when {
+
+                    (millisUntilFinished in 18000..25000) -> {
+
+                        binding.progressBar.changeColor(R.color.color_green)
+
+                    }
+                    millisUntilFinished in 13000..18000 -> {
+
+                        binding.progressBar.changeColor(R.color.color_light_yellow)
+                    }
+                    millisUntilFinished in 7000..13000 -> {
+
+                        binding.progressBar.changeColor(R.color.color_light_orange)
+                    }
+                    millisUntilFinished < 7000 -> {
+
+                        binding.progressBar.changeColor(R.color.color_orange)
+                    }
+
+                    else -> {
+
+                        binding.progressBar.changeColor(R.color.color_dark_green)
+                    }
+                }
+
                 binding.progressBar.progress = millisUntilFinished.toInt()
 
-                //todo : change the color of progress bar according to the progress finished
             }
 
             override fun onFinish() {
