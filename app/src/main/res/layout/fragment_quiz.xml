@@ -188,7 +188,7 @@
                     app:layout_constraintStart_toEndOf="@+id/divider3">
 
                     <TextView
-                        android:id="@+id/textView9"
+                        android:id="@+id/nextBtnTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -230,10 +230,15 @@
                     app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
                 <TextView
-                    android:id="@+id/difficultyTV"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/categoryTV"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="difficulty"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="category name"
                     android:textColor="@color/primary_text_color"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="@+id/questionNumberTV"
@@ -265,7 +270,7 @@
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/backBtn"
+            android:id="@+id/backBtnCV"
             android:layout_width="80dp"
             android:layout_height="50dp"
             app:cardBackgroundColor="@color/button_color"
@@ -279,7 +284,7 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/imageButton2"
+                    android:id="@+id/backBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/transparent"

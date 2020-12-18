@@ -6,7 +6,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.rohitthebest.others.Constants.NO_INTERNET_MESSAGE
 
@@ -57,25 +56,5 @@ class Functions {
 
         }
 
-
-        fun View.show() {
-
-            try {
-                this.visibility = View.VISIBLE
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        fun View.hide() {
-
-            try {
-                this.visibility = View.GONE
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 }

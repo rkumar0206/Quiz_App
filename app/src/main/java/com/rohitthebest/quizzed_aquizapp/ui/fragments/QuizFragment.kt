@@ -1,5 +1,7 @@
 package com.rohitthebest.quizzed_aquizapp.ui.fragments
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -14,8 +16,10 @@ import com.rohitthebest.quizzed_aquizapp.databinding.OptionsLayoutBinding
 import com.rohitthebest.quizzed_aquizapp.module.QuizApiViewModel
 import com.rohitthebest.quizzed_aquizapp.remote.Responses
 import com.rohitthebest.quizzed_aquizapp.remote.model.Result
-import com.rohitthebest.quizzed_aquizapp.util.Functions.Companion.hide
-import com.rohitthebest.quizzed_aquizapp.util.Functions.Companion.show
+import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.disable
+import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.enable
+import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.hide
+import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.show
 import com.rohitthebest.quizzed_aquizapp.util.Functions.Companion.showToast
 import com.rohitthebest.quizzed_aquizapp.util.GsonConverters.Companion.convertJSONStringToCustomQuizParameter
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,6 +44,12 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     private lateinit var timer: CountDownTimer
     private var totalQuestions = 10
 
+    private var oldHighScore = 0
+    private var oldStar = 0
+    private var highScore = 0
+    private var score = 0
+    private var star = 0
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -50,6 +60,8 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         questionList = ArrayList()
 
         binding.progressBar.max = 30000
+
+        disableNextButton()
 
         initListeners()
 
@@ -161,8 +173,15 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
             binding.nextBtn.id -> {
 
-                showToast(requireContext(), "next btn pressed")
-                //todo : show the next question
+                try {
+
+                    nextButtonTimer.cancel()
+                    checkAndDisplayNextQuestion()
+
+                } catch (e: Exception) {
+
+                    e.printStackTrace()
+                }
             }
 
             binding.saveBtn.id -> {
@@ -174,9 +193,38 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
             binding.backBtn.id -> {
 
                 //ask for confirmation in dialog
-                //timer.cancel()
-                requireActivity().onBackPressed()
+                try {
+
+                    timer.cancel()
+                    requireActivity().onBackPressed()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
+
+            //options
+
+            optionsBinding.optionA.id -> {
+
+                //todo : handle option A clicked
+            }
+
+
+            optionsBinding.optionB.id -> {
+
+                //todo : handle option B clicked
+            }
+
+            optionsBinding.optionC.id -> {
+
+                //todo : handle option C clicked
+            }
+
+            optionsBinding.optionD.id -> {
+
+                //todo : handle option D clicked
+            }
+
         }
     }
 
@@ -204,6 +252,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                             questionList = quiz.results
 
                             displayQuestion(++questionNumber)
+
                         }
                     } catch (e: Exception) {
 
@@ -218,20 +267,21 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                     requireActivity().onBackPressed()
                 }
             }
-
-
         }
-
     }
 
     private fun displayQuestion(questionNumber: Int) {
+
+        Log.i(TAG, "displayQuestion: $questionNumber")
 
         //set timer
         // set progress bar
         //set question number
         // set score
+        // disable next button
 
         binding.progressBar.progress = 30000
+        disableNextButton()
 
         setTimer()
 
@@ -245,20 +295,19 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         question.let {
 
             binding.questionTV.text = it.question
-            binding.difficultyTV.text = it.difficulty
-            binding.questionNumberTV.text = if (questionNumber < 10) {
+            binding.categoryTV.text = it.category
+            binding.questionNumberTV.text = if ((questionNumber + 1) < 10) {
 
-                "0$questionNumber/$totalQuestions"
+                "0${(questionNumber + 1)}/$totalQuestions"
             } else {
 
-                "$questionNumber/$totalQuestions"
+                "${(questionNumber + 1)}/$totalQuestions"
             }
 
             //set randomly the correct answer
             val randomNumber = Random.nextInt(1, 4)
 
             setUpOptions(randomNumber, question)
-
         }
     }
 
@@ -312,18 +361,71 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                 binding.progressBar.progress = millisUntilFinished.toInt()
 
-                //change the color of progress bar according to the progress finished
+                //todo : change the color of progress bar according to the progress finished
             }
 
             override fun onFinish() {
 
                 Log.i(TAG, "onFinish: ")
-                // display next question
+
+                setNextButtonTimer()
             }
         }.start()
 
     }
 
+    private lateinit var nextButtonTimer: CountDownTimer
+
+    private fun setNextButtonTimer() {
+
+        //todo : disable every options and also star button and also show the correct answer
+
+        enableNextButton()
+
+        nextButtonTimer = object : CountDownTimer(6000, 1000) {
+
+            @SuppressLint("SetTextI18n")
+            override fun onTick(millisUntilFinished: Long) {
+
+                binding.nextBtnTV.text = "Next (${millisUntilFinished / 1000})"
+            }
+
+            override fun onFinish() {
+
+                checkAndDisplayNextQuestion()
+            }
+        }.start()
+
+    }
+
+    private fun checkAndDisplayNextQuestion() {
+
+        if ((++questionNumber + 1) <= totalQuestions) {
+
+            displayQuestion(questionNumber)
+        } else {
+
+            showToast(requireContext(), "Your result")
+            //todo : show the result
+        }
+
+    }
+
+    private fun enableNextButton() {
+
+        binding.nextBtn.enable()
+
+        binding.nextBtn.setCardBackgroundColor(context?.getColor(R.color.button_color)!!)
+    }
+
+    private fun disableNextButton() {
+
+        binding.nextBtn.disable()
+
+        binding.nextBtn.setCardBackgroundColor(Color.GRAY)
+
+        binding.nextBtnTV.text = "Next"
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
