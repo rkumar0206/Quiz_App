@@ -3,6 +3,8 @@ package com.rohitthebest.quizzed_aquizapp.util
 import android.content.res.ColorStateList
 import android.view.View
 import android.widget.ProgressBar
+import androidx.cardview.widget.CardView
+import com.google.android.material.card.MaterialCardView
 
 class ExtensionFunctions {
 
@@ -55,7 +57,29 @@ class ExtensionFunctions {
                     color
                 )!!
             )
-
         }
+
+        fun CardView.setColor(color: Int) {
+
+            try {
+
+                this.setCardBackgroundColor(context?.getColor(color)!!)
+            } catch (e: java.lang.Exception) {
+
+                e.printStackTrace()
+            }
+        }
+
+        fun MaterialCardView.setColor(color: Int) {
+
+            try {
+
+                this.setCardBackgroundColor(context?.getColor(color)!!)
+            } catch (e: java.lang.Exception) {
+
+                e.printStackTrace()
+            }
+        }
+
     }
 }

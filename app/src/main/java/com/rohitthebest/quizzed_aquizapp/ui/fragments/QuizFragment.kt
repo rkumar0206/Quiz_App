@@ -20,6 +20,7 @@ import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.chang
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.disable
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.enable
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.hide
+import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.setColor
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.show
 import com.rohitthebest.quizzed_aquizapp.util.Functions.Companion.showToast
 import com.rohitthebest.quizzed_aquizapp.util.GsonConverters.Companion.convertJSONStringToCustomQuizParameter
@@ -41,7 +42,6 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
     private var questionList: List<Result> = emptyList()
     private var questionNumber = -1
-    private var selectedOption = ""
     private lateinit var timer: CountDownTimer
     private var totalQuestions = 10
 
@@ -207,28 +207,96 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
             optionsBinding.optionA.id -> {
 
-                //todo : handle option A clicked
+                if (checkAnswerWithClickedOption(optionsBinding.optionATV.text.toString().trim())) {
+
+                    optionsBinding.optionA.setColor(R.color.color_green)
+                } else {
+
+                    optionsBinding.optionA.setColor(R.color.color_orange)
+                }
+
+                setNextButtonTimer()
             }
 
 
             optionsBinding.optionB.id -> {
 
-                //todo : handle option B clicked
+                if (checkAnswerWithClickedOption(optionsBinding.optionBTV.text.toString().trim())) {
+
+                    optionsBinding.optionB.setColor(R.color.color_green)
+                } else {
+
+                    optionsBinding.optionB.setColor(R.color.color_orange)
+                }
+
+                setNextButtonTimer()
             }
 
             optionsBinding.optionC.id -> {
 
-                //todo : handle option C clicked
+                if (checkAnswerWithClickedOption(optionsBinding.optionCTV.text.toString().trim())) {
+
+                    optionsBinding.optionC.setColor(R.color.color_green)
+                } else {
+
+                    optionsBinding.optionC.setColor(R.color.color_orange)
+                }
+
+                setNextButtonTimer()
+
             }
 
             optionsBinding.optionD.id -> {
 
-                //todo : handle option D clicked
+                if (checkAnswerWithClickedOption(optionsBinding.optionDTV.text.toString().trim())) {
+
+                    optionsBinding.optionD.setColor(R.color.color_green)
+                } else {
+
+                    optionsBinding.optionD.setColor(R.color.color_orange)
+                }
+
+                setNextButtonTimer()
             }
 
         }
     }
 
+    private fun checkAnswerWithClickedOption(clickedOption: String): Boolean {
+
+        try {
+
+            timer.cancel()
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+        }
+
+        when {
+
+            optionsBinding.optionATV.text.toString()
+                .trim() == questionList[questionNumber].correct_answer.trim() -> optionsBinding.optionA.setColor(
+                R.color.color_green
+            )
+
+            optionsBinding.optionBTV.text.toString()
+                .trim() == questionList[questionNumber].correct_answer.trim() -> optionsBinding.optionB.setColor(
+                R.color.color_green
+            )
+
+            optionsBinding.optionCTV.text.toString()
+                .trim() == questionList[questionNumber].correct_answer.trim() -> optionsBinding.optionC.setColor(
+                R.color.color_green
+            )
+
+            optionsBinding.optionDTV.text.toString()
+                .trim() == questionList[questionNumber].correct_answer.trim() -> optionsBinding.optionD.setColor(
+                R.color.color_green
+            )
+        }
+
+        return clickedOption == questionList[questionNumber].correct_answer.trim()
+    }
 
     private fun observeApiResponse() {
 
@@ -275,18 +343,20 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
         Log.i(TAG, "displayQuestion: $questionNumber")
 
-        //set timer
-        // set progress bar
-        //set question number
-        // set score
-        // disable next button
-
-        binding.progressBar.progress = 30000
+        binding.progressBar.progress = 31000
         disableNextButton()
-
+        enableAllTheRequiredButtons()
+        resetTheColorBackgroundOfOptionsCardView()
         setTimer()
-
         updateQuestionUI(questionNumber)
+    }
+
+    private fun resetTheColorBackgroundOfOptionsCardView() {
+
+        optionsBinding.optionA.setColor(R.color.white)
+        optionsBinding.optionB.setColor(R.color.white)
+        optionsBinding.optionC.setColor(R.color.white)
+        optionsBinding.optionD.setColor(R.color.white)
     }
 
     private fun updateQuestionUI(questionNumber: Int) {
@@ -404,7 +474,9 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
     private fun setNextButtonTimer() {
 
-        //todo : disable every options and also star button and also show the correct answer
+        disableAllTheRequiredButtons()
+
+        checkAnswerWithClickedOption("")
 
         enableNextButton()
 
@@ -422,6 +494,36 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
             }
         }.start()
 
+    }
+
+    private fun disableAllTheRequiredButtons() {
+
+        try {
+
+            optionsBinding.optionA.disable()
+            optionsBinding.optionB.disable()
+            optionsBinding.optionC.disable()
+            optionsBinding.optionD.disable()
+            binding.starBtn.disable()
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+        }
+    }
+
+    private fun enableAllTheRequiredButtons() {
+
+        try {
+
+            optionsBinding.optionA.enable()
+            optionsBinding.optionB.enable()
+            optionsBinding.optionC.enable()
+            optionsBinding.optionD.enable()
+            binding.starBtn.enable()
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+        }
     }
 
     private fun checkAndDisplayNextQuestion() {
