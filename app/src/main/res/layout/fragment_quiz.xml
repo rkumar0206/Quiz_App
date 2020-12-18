@@ -229,6 +229,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
+                <TextView
+                    android:id="@+id/difficultyTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="difficulty"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/questionNumberTV"
+                    app:layout_constraintEnd_toStartOf="@+id/scoreTV"
+                    app:layout_constraintStart_toEndOf="@+id/questionNumberTV"
+                    app:layout_constraintTop_toTopOf="@+id/questionNumberTV" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>

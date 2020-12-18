@@ -1,7 +1,10 @@
 package com.rohitthebest.quizzed_aquizapp.ui.fragments
 
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rohitthebest.helperClasses.Type
@@ -17,6 +20,9 @@ import com.rohitthebest.quizzed_aquizapp.util.Functions.Companion.showToast
 import com.rohitthebest.quizzed_aquizapp.util.GsonConverters.Companion.convertJSONStringToCustomQuizParameter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlin.random.Random
+
+private const val TAG = "QuizFragment"
 
 @AndroidEntryPoint
 class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
@@ -29,6 +35,10 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     private lateinit var optionsBinding: OptionsLayoutBinding
 
     private var questionList: List<Result> = emptyList()
+    private var questionNumber = -1
+    private var selectedOption = ""
+    private lateinit var timer: CountDownTimer
+    private var totalQuestions = 10
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,6 +48,8 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         optionsBinding = binding.includeOption
 
         questionList = ArrayList()
+
+        binding.progressBar.max = 30000
 
         initListeners()
 
@@ -67,7 +79,12 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                             withContext(Dispatchers.Main) {
 
-                                quizViewModel.fetchQuiz(10)
+                                val queryMap = HashMap<String, String>()
+                                queryMap["amount"] = 10.toString()
+                                queryMap["type"] = "multiple"
+
+                                startCustomQuiz(queryMap)
+                                totalQuestions = 10
                             }
                         }
                     }
@@ -75,7 +92,12 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                     Type.CHOOSE_CATEGORY -> {
 
                         val queryMap = HashMap<String, String>()
+
+                        queryMap["amount"] = 10.toString()
                         queryMap["category"] = quiz.categoryNumber.toString()
+                        queryMap["type"] = "multiple"
+
+                        totalQuestions = 10
 
                         startCustomQuiz(queryMap)
                     }
@@ -84,9 +106,12 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                         val queryMap = HashMap<String, String>()
 
+                        queryMap["amount"] = quiz?.numberOfQuestion.toString()
+                        queryMap["category"] = quiz?.categoryNumber.toString()
                         queryMap["difficulty"] = quiz?.difficulty.toString()
                         queryMap["type"] = "multiple"
-                        queryMap["amount"] = quiz?.numberOfQuestion.toString()
+
+                        totalQuestions = quiz?.numberOfQuestion?.toInt()!!
 
                         startCustomQuiz(queryMap)
                     }
@@ -128,7 +153,30 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
         when (v?.id) {
 
+            binding.starBtn.id -> {
 
+                showToast(requireContext(), "star btn pressed")
+                //todo : show dialog to use the stars
+            }
+
+            binding.nextBtn.id -> {
+
+                showToast(requireContext(), "next btn pressed")
+                //todo : show the next question
+            }
+
+            binding.saveBtn.id -> {
+
+                showToast(requireContext(), "Save btn pressed")
+                //todo : save question to database
+            }
+
+            binding.backBtn.id -> {
+
+                //ask for confirmation in dialog
+                //timer.cancel()
+                requireActivity().onBackPressed()
+            }
         }
     }
 
@@ -152,10 +200,10 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                         it.data?.let { quiz ->
 
-                            //todo : aasign the list to the list
-
+                            //assigning the list to the question list
                             questionList = quiz.results
-                            showToast(requireContext(), "${questionList[0]}")
+
+                            displayQuestion(++questionNumber)
                         }
                     } catch (e: Exception) {
 
@@ -165,11 +213,114 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                 is Responses.Error -> {
 
+                    showToast(requireContext(), it.message.toString(), Toast.LENGTH_LONG)
+
+                    requireActivity().onBackPressed()
                 }
             }
 
 
         }
+
+    }
+
+    private fun displayQuestion(questionNumber: Int) {
+
+        //set timer
+        // set progress bar
+        //set question number
+        // set score
+
+        binding.progressBar.progress = 30000
+
+        setTimer()
+
+        updateQuestionUI(questionNumber)
+    }
+
+    private fun updateQuestionUI(questionNumber: Int) {
+
+        val question = questionList[questionNumber]
+
+        question.let {
+
+            binding.questionTV.text = it.question
+            binding.difficultyTV.text = it.difficulty
+            binding.questionNumberTV.text = if (questionNumber < 10) {
+
+                "0$questionNumber/$totalQuestions"
+            } else {
+
+                "$questionNumber/$totalQuestions"
+            }
+
+            //set randomly the correct answer
+            val randomNumber = Random.nextInt(1, 4)
+
+            setUpOptions(randomNumber, question)
+
+        }
+    }
+
+    private fun setUpOptions(randomNumber: Int, question: Result) {
+
+        when (randomNumber) {
+
+            1 -> {
+
+                optionsBinding.optionATV.text = question.correct_answer
+
+                optionsBinding.optionBTV.text = question.incorrect_answers[0]
+                optionsBinding.optionCTV.text = question.incorrect_answers[1]
+                optionsBinding.optionDTV.text = question.incorrect_answers[2]
+            }
+
+            2 -> {
+
+                optionsBinding.optionBTV.text = question.correct_answer
+
+                optionsBinding.optionATV.text = question.incorrect_answers[0]
+                optionsBinding.optionCTV.text = question.incorrect_answers[1]
+                optionsBinding.optionDTV.text = question.incorrect_answers[2]
+            }
+
+            3 -> {
+
+                optionsBinding.optionCTV.text = question.correct_answer
+
+                optionsBinding.optionBTV.text = question.incorrect_answers[0]
+                optionsBinding.optionATV.text = question.incorrect_answers[1]
+                optionsBinding.optionDTV.text = question.incorrect_answers[2]
+            }
+
+            else -> {
+
+                optionsBinding.optionDTV.text = question.correct_answer
+
+                optionsBinding.optionBTV.text = question.incorrect_answers[0]
+                optionsBinding.optionCTV.text = question.incorrect_answers[1]
+                optionsBinding.optionATV.text = question.incorrect_answers[2]
+            }
+        }
+    }
+
+    private fun setTimer() {
+
+        timer = object : CountDownTimer(30000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+
+                binding.progressBar.progress = millisUntilFinished.toInt()
+
+                //change the color of progress bar according to the progress finished
+            }
+
+            override fun onFinish() {
+
+                Log.i(TAG, "onFinish: ")
+                // display next question
+            }
+        }.start()
 
     }
 
