@@ -376,7 +376,9 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
             }
 
             //set randomly the correct answer
-            val randomNumber = Random.nextInt(1, 4)
+            val randomNumber = Random.nextInt(1, 5) //5 is exclusive
+
+            Log.i(TAG, "updateQuestionUI: random number : $randomNumber")
 
             setUpOptions(randomNumber, question)
         }
@@ -480,19 +482,24 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
         enableNextButton()
 
-        nextButtonTimer = object : CountDownTimer(6000, 1000) {
+        try {
+            nextButtonTimer = object : CountDownTimer(6000, 1000) {
 
-            @SuppressLint("SetTextI18n")
-            override fun onTick(millisUntilFinished: Long) {
+                @SuppressLint("SetTextI18n")
+                override fun onTick(millisUntilFinished: Long) {
 
-                binding.nextBtnTV.text = "Next (${millisUntilFinished / 1000})"
-            }
+                    binding.nextBtnTV.text = "Next (${millisUntilFinished / 1000})"
+                }
 
-            override fun onFinish() {
+                override fun onFinish() {
 
-                checkAndDisplayNextQuestion()
-            }
-        }.start()
+                    checkAndDisplayNextQuestion()
+                }
+            }.start()
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+        }
 
     }
 
@@ -558,6 +565,27 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
 
+        try {
+
+            timer.cancel()
+            nextButtonTimer.cancel()
+
+        } catch (e: java.lang.Exception) {
+
+            e.printStackTrace()
+        }
+
         _binding = null
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        try {
+            requireActivity().onBackPressed()
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+        }
     }
 }
