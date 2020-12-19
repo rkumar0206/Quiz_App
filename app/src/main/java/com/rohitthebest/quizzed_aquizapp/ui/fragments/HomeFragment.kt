@@ -3,10 +3,12 @@ package com.rohitthebest.quizzed_aquizapp.ui.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import com.rohitthebest.helperClasses.CustomQuizParameters
 import com.rohitthebest.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.R
+import com.rohitthebest.quizzed_aquizapp.dataStorage.preferenceDatastore.StoreScoreAndStar
 import com.rohitthebest.quizzed_aquizapp.databinding.FragmentHomeBinding
 import com.rohitthebest.quizzed_aquizapp.databinding.HomeLayoutBinding
 import com.rohitthebest.quizzed_aquizapp.util.CheckNetworkConnection.isInternetAvailable
@@ -19,13 +21,32 @@ class HomeFragment : Fragment(R.layout.fragment_home), View.OnClickListener {
     private val binding get() = _binding!!
     private lateinit var includeBinding: HomeLayoutBinding
 
+    private lateinit var highScoreAndStarDataStore: StoreScoreAndStar
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentHomeBinding.bind(view)
         includeBinding = binding.include
 
+        highScoreAndStarDataStore = StoreScoreAndStar(requireContext())
+        observeHighScoreAndStar()
+
         initListeners()
+    }
+
+    private fun observeHighScoreAndStar() {
+
+        try {
+            highScoreAndStarDataStore.flow.asLiveData().observe(viewLifecycleOwner) {
+
+                binding.include.highScoreTV.text = it.high_score.toString()
+                binding.include.starTV.text = it.star.toString()
+            }
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+        }
     }
 
     private fun initListeners() {

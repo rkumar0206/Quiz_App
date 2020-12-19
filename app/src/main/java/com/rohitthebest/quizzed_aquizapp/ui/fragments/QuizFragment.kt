@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
+import com.google.android.material.card.MaterialCardView
 import com.rohitthebest.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.R
 import com.rohitthebest.quizzed_aquizapp.dataStorage.preferenceDatastore.StoreScoreAndStar
@@ -51,7 +52,6 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
     private var oldHighScore = 0
     private var oldStar = 0
-    private var highScore = 0
     private var score = 0
     private var star = 0
 
@@ -81,13 +81,19 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
     private fun observeHighScoreAndStar() {
 
-        highScoreAndStarDataStore.flow.asLiveData().observe(viewLifecycleOwner) {
+        try {
+            highScoreAndStarDataStore.flow.asLiveData().observe(viewLifecycleOwner) {
 
-            oldHighScore = it.high_score
-            oldStar = it.star
+                oldHighScore = it.high_score
+                oldStar = it.star
+            }
+
+            binding.numberOfStarTV.text = oldStar.toString()
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
         }
-
-        binding.numberOfStarTV.text = oldStar.toString()
 
     }
 
@@ -229,7 +235,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                 if (checkAnswerWithClickedOption(optionsBinding.optionATV.text.toString().trim())) {
 
-                    optionsBinding.optionA.setColor(R.color.color_green)
+                    increaseScoreAndSetColor(optionsBinding.optionA)
                 } else {
 
                     optionsBinding.optionA.setColor(R.color.color_orange)
@@ -243,7 +249,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                 if (checkAnswerWithClickedOption(optionsBinding.optionBTV.text.toString().trim())) {
 
-                    optionsBinding.optionB.setColor(R.color.color_green)
+                    increaseScoreAndSetColor(optionsBinding.optionB)
                 } else {
 
                     optionsBinding.optionB.setColor(R.color.color_orange)
@@ -256,7 +262,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                 if (checkAnswerWithClickedOption(optionsBinding.optionCTV.text.toString().trim())) {
 
-                    optionsBinding.optionC.setColor(R.color.color_green)
+                    increaseScoreAndSetColor(optionsBinding.optionC)
                 } else {
 
                     optionsBinding.optionC.setColor(R.color.color_orange)
@@ -270,7 +276,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                 if (checkAnswerWithClickedOption(optionsBinding.optionDTV.text.toString().trim())) {
 
-                    optionsBinding.optionD.setColor(R.color.color_green)
+                    increaseScoreAndSetColor(optionsBinding.optionD)
                 } else {
 
                     optionsBinding.optionD.setColor(R.color.color_orange)
@@ -318,44 +324,59 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         return clickedOption == questionList[questionNumber].correct_answer.trim()
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun increaseScoreAndSetColor(option: MaterialCardView) {
+
+        score += 2
+        binding.scoreTV.text = "Score : $score"
+
+
+        option.setColor(R.color.color_green)
+    }
+
     private fun observeApiResponse() {
 
-        quizViewModel.quiz.observe(viewLifecycleOwner) {
+        try {
+            quizViewModel.quiz.observe(viewLifecycleOwner) {
 
-            when (it) {
+                when (it) {
 
-                is Responses.Loading -> {
+                    is Responses.Loading -> {
 
-                    binding.pleaseWaitCL.show()
-                }
+                        binding.pleaseWaitCL.show()
+                    }
 
-                is Responses.Success -> {
+                    is Responses.Success -> {
 
-                    try {
-                        binding.pleaseWaitCL.hide()
-                        binding.questionCL.show()
+                        try {
+                            binding.pleaseWaitCL.hide()
+                            binding.questionCL.show()
 
-                        it.data?.let { quiz ->
+                            it.data?.let { quiz ->
 
-                            //assigning the list to the question list
-                            questionList = quiz.results
+                                //assigning the list to the question list
+                                questionList = quiz.results
 
-                            displayQuestion(++questionNumber)
+                                displayQuestion(++questionNumber)
 
+                            }
+                        } catch (e: Exception) {
+
+                            e.printStackTrace()
                         }
-                    } catch (e: Exception) {
+                    }
 
-                        e.printStackTrace()
+                    is Responses.Error -> {
+
+                        showToast(requireContext(), it.message.toString(), Toast.LENGTH_LONG)
+
+                        requireActivity().onBackPressed()
                     }
                 }
-
-                is Responses.Error -> {
-
-                    showToast(requireContext(), it.message.toString(), Toast.LENGTH_LONG)
-
-                    requireActivity().onBackPressed()
-                }
             }
+        } catch (e: Exception) {
+
+            e.printStackTrace()
         }
     }
 
@@ -562,8 +583,15 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
             showToast(requireContext(), "Your result")
             //todo : show the result
-        }
 
+            if (score > oldHighScore) {
+
+                GlobalScope.launch {
+
+                    highScoreAndStarDataStore.storeData(score, star)
+                }
+            }
+        }
     }
 
     private fun enableNextButton() {

@@ -19,7 +19,7 @@
 
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/highScoreTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -44,7 +44,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/starTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -62,11 +62,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:padding="2dp"
-            android:text="Highscore"
+            android:text="High score"
             android:textColor="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/divider"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/highScoreTV" />
 
         <TextView
             android:id="@+id/textView4"
@@ -81,7 +81,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/divider"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            app:layout_constraintTop_toBottomOf="@+id/starTV" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
