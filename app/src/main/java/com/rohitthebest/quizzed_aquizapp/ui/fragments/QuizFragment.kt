@@ -9,8 +9,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import com.rohitthebest.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.R
+import com.rohitthebest.quizzed_aquizapp.dataStorage.preferenceDatastore.StoreScoreAndStar
 import com.rohitthebest.quizzed_aquizapp.databinding.FragmentQuizBinding
 import com.rohitthebest.quizzed_aquizapp.databinding.OptionsLayoutBinding
 import com.rohitthebest.quizzed_aquizapp.module.QuizApiViewModel
@@ -40,6 +42,8 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
     private lateinit var optionsBinding: OptionsLayoutBinding
 
+    private lateinit var highScoreAndStarDataStore: StoreScoreAndStar
+
     private var questionList: List<Result> = emptyList()
     private var questionNumber = -1
     private lateinit var timer: CountDownTimer
@@ -62,13 +66,29 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
         binding.progressBar.max = 31000
 
+        highScoreAndStarDataStore = StoreScoreAndStar(requireContext())
+
         disableNextButton()
 
         initListeners()
 
         getMessage()
 
+        observeHighScoreAndStar()
+
         observeApiResponse()
+    }
+
+    private fun observeHighScoreAndStar() {
+
+        highScoreAndStarDataStore.flow.asLiveData().observe(viewLifecycleOwner) {
+
+            oldHighScore = it.high_score
+            oldStar = it.star
+        }
+
+        binding.numberOfStarTV.text = oldStar.toString()
+
     }
 
     private fun getMessage() {

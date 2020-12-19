@@ -113,4 +113,7 @@ dependencies {
     //lottie files
     implementation 'com.airbnb.android:lottie:3.5.0'
 
+    // Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha05"
+
 }
