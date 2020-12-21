@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
-import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.rohitthebest.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.R
 import com.rohitthebest.quizzed_aquizapp.dataStorage.preferenceDatastore.StoreScoreAndStar
@@ -50,6 +50,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     private var questionNumber = -1
     private lateinit var timer: CountDownTimer
     private var totalQuestions = 10
+    private var correctAnswer = ""
 
     private var oldHighScore = 0
     private var score = 0
@@ -194,6 +195,12 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                 showToast(requireContext(), "star btn pressed")
                 //todo : show dialog to use the stars
+
+                val timeLeft = binding.progressBar.progress
+
+                timer.cancel()
+
+                showDialogForUsingStars(timeLeft)
             }
 
             binding.nextBtn.id -> {
@@ -228,12 +235,11 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
             }
 
             //options
-
             optionsBinding.optionA.id -> {
 
                 if (checkAnswerWithClickedOption(optionsBinding.optionATV.text.toString().trim())) {
 
-                    increaseScoreAndSetColor(optionsBinding.optionA)
+                    increaseScore()
                 } else {
 
                     optionsBinding.optionA.setColor(R.color.color_orange)
@@ -242,12 +248,11 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                 setNextButtonTimer()
             }
 
-
             optionsBinding.optionB.id -> {
 
                 if (checkAnswerWithClickedOption(optionsBinding.optionBTV.text.toString().trim())) {
 
-                    increaseScoreAndSetColor(optionsBinding.optionB)
+                    increaseScore()
                 } else {
 
                     optionsBinding.optionB.setColor(R.color.color_orange)
@@ -260,7 +265,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                 if (checkAnswerWithClickedOption(optionsBinding.optionCTV.text.toString().trim())) {
 
-                    increaseScoreAndSetColor(optionsBinding.optionC)
+                    increaseScore()
                 } else {
 
                     optionsBinding.optionC.setColor(R.color.color_orange)
@@ -274,7 +279,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                 if (checkAnswerWithClickedOption(optionsBinding.optionDTV.text.toString().trim())) {
 
-                    increaseScoreAndSetColor(optionsBinding.optionD)
+                    increaseScore()
                 } else {
 
                     optionsBinding.optionD.setColor(R.color.color_orange)
@@ -282,8 +287,32 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                 setNextButtonTimer()
             }
-
         }
+    }
+
+    private fun showDialogForUsingStars(timeLeft: Int) {
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Want to use your stars?")
+            .setMessage("Use your 3 stars to get the answer.")
+            .setPositiveButton("Use 3 stars") { dialog, _ ->
+
+                star -= 3
+                saveData(oldHighScore, star)
+
+                increaseScore()
+
+                setNextButtonTimer()
+                dialog.dismiss()
+
+            }.setNegativeButton("Cancel") { dialog, _ ->
+
+                setTimer(timeLeft.toLong())
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .create()
+            .show()
     }
 
     private fun checkAnswerWithClickedOption(clickedOption: String): Boolean {
@@ -323,7 +352,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun increaseScoreAndSetColor(option: MaterialCardView) {
+    private fun increaseScore() {
 
         score += 2
         binding.scoreTV.text = "Score : $score"
@@ -335,7 +364,6 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
             star++
 
             saveData(oldHighScore, star)
-
         }
 
         if (score == 16) {
@@ -346,8 +374,6 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
             saveData(oldHighScore, star)
         }
-
-        option.setColor(R.color.color_green)
     }
 
     private fun showStarAnimation() {
@@ -365,6 +391,8 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                 binding.starAnimation.hide()
                 binding.starBtn.show()
                 binding.numberOfStarTV.show()
+
+                binding.starAnimation.progress = 0.0f
             }
         }
     }
@@ -423,7 +451,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         disableNextButton()
         enableAllTheRequiredButtons()
         resetTheColorBackgroundOfOptionsCardView()
-        setTimer()
+        setTimer(31000)
         updateQuestionUI(questionNumber)
     }
 
@@ -461,6 +489,8 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     }
 
     private fun setUpOptions(randomNumber: Int, question: Result) {
+
+        correctAnswer = question.correct_answer
 
         when (randomNumber) {
 
@@ -502,9 +532,9 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         }
     }
 
-    private fun setTimer() {
+    private fun setTimer(millisInFuture: Long) {
 
-        timer = object : CountDownTimer(31000, 100) {
+        timer = object : CountDownTimer(millisInFuture, 100) {
 
             override fun onTick(millisUntilFinished: Long) {
 
@@ -633,7 +663,6 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
             highScoreAndStarDataStore.storeData(highScore, star)
         }
     }
-
 
     private fun enableNextButton() {
 
