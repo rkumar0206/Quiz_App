@@ -23,6 +23,7 @@ import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.chang
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.disable
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.enable
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.hide
+import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.invisible
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.setColor
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.show
 import com.rohitthebest.quizzed_aquizapp.util.Functions.Companion.showToast
@@ -51,7 +52,6 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     private var totalQuestions = 10
 
     private var oldHighScore = 0
-    private var oldStar = 0
     private var score = 0
     private var star = 0
 
@@ -85,11 +85,9 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
             highScoreAndStarDataStore.flow.asLiveData().observe(viewLifecycleOwner) {
 
                 oldHighScore = it.high_score
-                oldStar = it.star
+                star = it.star
+                binding.numberOfStarTV.text = star.toString()
             }
-
-            binding.numberOfStarTV.text = oldStar.toString()
-
         } catch (e: Exception) {
 
             e.printStackTrace()
@@ -330,8 +328,45 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         score += 2
         binding.scoreTV.text = "Score : $score"
 
+        if (score == 8) {
+
+            showStarAnimation()
+            //todo : make visible the lottie animation for adding star
+            star++
+
+            saveData(oldHighScore, star)
+
+        }
+
+        if (score == 16) {
+
+            showStarAnimation()
+
+            star += 2
+
+            saveData(oldHighScore, star)
+        }
 
         option.setColor(R.color.color_green)
+    }
+
+    private fun showStarAnimation() {
+
+        binding.starAnimation.show()
+        binding.starBtn.invisible()
+        binding.numberOfStarTV.invisible()
+
+        GlobalScope.launch {
+
+            delay(1200)
+
+            withContext(Dispatchers.Main) {
+
+                binding.starAnimation.hide()
+                binding.starBtn.show()
+                binding.numberOfStarTV.show()
+            }
+        }
     }
 
     private fun observeApiResponse() {
@@ -586,13 +621,19 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
             if (score > oldHighScore) {
 
-                GlobalScope.launch {
-
-                    highScoreAndStarDataStore.storeData(score, star)
-                }
+                saveData(score, star)
             }
         }
     }
+
+    private fun saveData(highScore: Int, star: Int) {
+
+        GlobalScope.launch {
+
+            highScoreAndStarDataStore.storeData(highScore, star)
+        }
+    }
+
 
     private fun enableNextButton() {
 

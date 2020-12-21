@@ -30,6 +30,17 @@ class ExtensionFunctions {
             }
         }
 
+        fun View.invisible() {
+
+            try {
+                this.visibility = View.INVISIBLE
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        }
+
         fun View.enable() {
 
             try {
