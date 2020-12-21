@@ -6,10 +6,15 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.customview.getCustomView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.rohitthebest.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.R
@@ -55,6 +60,8 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     private var oldHighScore = 0
     private var score = 0
     private var star = 0
+    private var correctAnswers = 0
+    private var wrongAnswers = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -193,9 +200,6 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
             binding.starBtn.id -> {
 
-                showToast(requireContext(), "star btn pressed")
-                //todo : show dialog to use the stars
-
                 val timeLeft = binding.progressBar.progress
 
                 timer.cancel()
@@ -243,6 +247,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                 } else {
 
                     optionsBinding.optionA.setColor(R.color.color_orange)
+                    wrongAnswers++
                 }
 
                 setNextButtonTimer()
@@ -256,6 +261,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                 } else {
 
                     optionsBinding.optionB.setColor(R.color.color_orange)
+                    wrongAnswers++
                 }
 
                 setNextButtonTimer()
@@ -269,6 +275,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                 } else {
 
                     optionsBinding.optionC.setColor(R.color.color_orange)
+                    wrongAnswers++
                 }
 
                 setNextButtonTimer()
@@ -283,6 +290,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                 } else {
 
                     optionsBinding.optionD.setColor(R.color.color_orange)
+                    wrongAnswers++
                 }
 
                 setNextButtonTimer()
@@ -354,13 +362,14 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     @SuppressLint("SetTextI18n")
     private fun increaseScore() {
 
+        correctAnswers++
+
         score += 2
         binding.scoreTV.text = "Score : $score"
 
         if (score == 8) {
 
             showStarAnimation()
-            //todo : make visible the lottie animation for adding star
             star++
 
             saveData(oldHighScore, star)
@@ -647,13 +656,43 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         } else {
 
             showToast(requireContext(), "Your result")
-            //todo : show the result
+
+            showResult()
+
 
             if (score > oldHighScore) {
 
                 saveData(score, star)
             }
         }
+    }
+
+    private fun showResult() {
+
+        MaterialDialog(requireContext(), BottomSheet()).show {
+
+            title(text = "Your result")
+
+            customView(
+                R.layout.result_layout,
+                scrollable = true
+            )
+            getCustomView().findViewById<TextView>(R.id.correctAnswersTV).text =
+                correctAnswers.toString()
+            getCustomView().findViewById<TextView>(R.id.incoreectAnwersTV).text =
+                wrongAnswers.toString()
+            getCustomView().findViewById<TextView>(R.id.resultScoreTV).text = score.toString()
+
+        }.positiveButton(text = "Start again") {
+
+            //getMessage()
+
+        }.negativeButton(text = "Go back") {
+
+            requireActivity().onBackPressed()
+        }
+
+
     }
 
     private fun saveData(highScore: Int, star: Int) {
