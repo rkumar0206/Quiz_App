@@ -138,11 +138,11 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                         val queryMap = HashMap<String, String>()
 
-                        queryMap["amount"] = 10.toString()
+                        queryMap["amount"] = quiz.numberOfQuestion.toString()
                         queryMap["category"] = quiz.categoryNumber.toString()
                         queryMap["type"] = "multiple"
 
-                        totalQuestions = 10
+                        totalQuestions = quiz.numberOfQuestion?.toInt()!!
 
                         startCustomQuiz(queryMap)
                     }
