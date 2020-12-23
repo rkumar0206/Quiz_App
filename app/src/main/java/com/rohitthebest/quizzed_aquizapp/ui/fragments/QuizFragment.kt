@@ -16,11 +16,11 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.rohitthebest.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.R
 import com.rohitthebest.quizzed_aquizapp.dataStorage.preferenceDatastore.StoreScoreAndStar
 import com.rohitthebest.quizzed_aquizapp.databinding.FragmentQuizBinding
 import com.rohitthebest.quizzed_aquizapp.databinding.OptionsLayoutBinding
+import com.rohitthebest.quizzed_aquizapp.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.module.QuizApiViewModel
 import com.rohitthebest.quizzed_aquizapp.remote.Responses
 import com.rohitthebest.quizzed_aquizapp.remote.model.Result

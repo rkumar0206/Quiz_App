@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.createDataStore
-import com.rohitthebest.others.Constants.HIGH_SCORE_KEY
-import com.rohitthebest.others.Constants.STAR_KEY
+import com.rohitthebest.quizzed_aquizapp.others.Constants.HIGH_SCORE_KEY
+import com.rohitthebest.quizzed_aquizapp.others.Constants.STAR_KEY
 import kotlinx.coroutines.flow.map
 
 data class HighScoreAndStar(val high_score: Int, val star: Int)

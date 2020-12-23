@@ -1,4 +1,4 @@
-package com.rohitthebest.helperClasses
+package com.rohitthebest.quizzed_aquizapp.helperClasses
 
 data class CustomQuizParameters(
     var type: Type = Type.ANY,

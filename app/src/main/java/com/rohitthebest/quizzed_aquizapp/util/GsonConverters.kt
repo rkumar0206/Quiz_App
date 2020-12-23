@@ -2,7 +2,7 @@ package com.rohitthebest.quizzed_aquizapp.util
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.rohitthebest.helperClasses.CustomQuizParameters
+import com.rohitthebest.quizzed_aquizapp.helperClasses.CustomQuizParameters
 
 class GsonConverters {
 

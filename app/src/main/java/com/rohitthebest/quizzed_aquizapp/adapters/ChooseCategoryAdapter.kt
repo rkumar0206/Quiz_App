@@ -1,4 +1,4 @@
-package com.rohitthebest.adapters
+package com.rohitthebest.quizzed_aquizapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

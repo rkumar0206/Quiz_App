@@ -5,12 +5,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
-import com.rohitthebest.helperClasses.CustomQuizParameters
-import com.rohitthebest.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.R
 import com.rohitthebest.quizzed_aquizapp.dataStorage.preferenceDatastore.StoreScoreAndStar
 import com.rohitthebest.quizzed_aquizapp.databinding.FragmentHomeBinding
 import com.rohitthebest.quizzed_aquizapp.databinding.HomeLayoutBinding
+import com.rohitthebest.quizzed_aquizapp.helperClasses.CustomQuizParameters
+import com.rohitthebest.quizzed_aquizapp.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.util.CheckNetworkConnection.isInternetAvailable
 import com.rohitthebest.quizzed_aquizapp.util.Functions.Companion.showNoInternetMessage
 import com.rohitthebest.quizzed_aquizapp.util.GsonConverters.Companion.convertCustomQuizParameterToString

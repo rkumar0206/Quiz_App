@@ -9,11 +9,13 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/background_color">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
+            android:background="@color/background_color"
             app:layout_scrollFlags="enterAlways|scroll">
 
             <RelativeLayout

@@ -1,4 +1,4 @@
-package com.rohitthebest.others
+package com.rohitthebest.quizzed_aquizapp.others
 
 object Constants {
 

@@ -7,7 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import com.rohitthebest.others.Constants.NO_INTERNET_MESSAGE
+import com.rohitthebest.quizzed_aquizapp.R
+import com.rohitthebest.quizzed_aquizapp.others.Constants.NO_INTERNET_MESSAGE
+import com.rohitthebest.quizzed_aquizapp.ui.fragments.Category
 
 class Functions {
 
@@ -55,6 +57,31 @@ class Functions {
             showToast(activity, "Copied")
 
         }
+
+        fun populateCategoryList(): ArrayList<Category> {
+
+            val categoryList = ArrayList<Category>()
+
+            categoryList.add(Category(R.drawable.general_knowledge, "General Knowledge", 9))
+            categoryList.add(Category(R.drawable.animals, "Animals", 27))
+            categoryList.add(Category(R.drawable.art, "Art", 25))
+            categoryList.add(Category(R.drawable.books, "Books", 10))
+            categoryList.add(Category(R.drawable.computer, "Computer", 18))
+            categoryList.add(Category(R.drawable.film, "Film", 11))
+            categoryList.add(Category(R.drawable.politics, "Politics", 24))
+            categoryList.add(Category(R.drawable.gadget2, "Gadget", 30))
+            categoryList.add(Category(R.drawable.geography, "Geography", 22))
+            categoryList.add(Category(R.drawable.mathematics, "Mathematics", 19))
+            categoryList.add(Category(R.drawable.music, "Music", 12))
+            categoryList.add(Category(R.drawable.mythology, "Mythology", 20))
+            categoryList.add(Category(R.drawable.nature, "Nature", 17))
+            categoryList.add(Category(R.drawable.sports, "Sports", 21))
+            categoryList.add(Category(R.drawable.vehicles, "Vehicles", 28))
+            categoryList.add(Category(R.drawable.video_games, "Video-games", 15))
+
+            return categoryList
+        }
+
 
     }
 }
