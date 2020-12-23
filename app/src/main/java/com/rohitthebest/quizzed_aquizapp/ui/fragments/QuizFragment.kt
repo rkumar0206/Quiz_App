@@ -367,7 +367,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         score += 2
         binding.scoreTV.text = "Score : $score"
 
-        if (score == 8) {
+        if (score == 6) {
 
             showStarAnimation()
             star++
@@ -375,7 +375,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
             saveData(oldHighScore, star)
         }
 
-        if (score == 16) {
+        if (score == 12) {
 
             showStarAnimation()
 
