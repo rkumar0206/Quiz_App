@@ -270,14 +270,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
             binding.backBtn.id -> {
 
-                //todo : ask for confirmation in dialog
-                try {
-
-                    timer.cancel()
-                    requireActivity().onBackPressed()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+                askForConfirmation()
             }
 
             //options
@@ -338,6 +331,36 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                 setNextButtonTimer()
             }
         }
+    }
+
+    private fun askForConfirmation() {
+
+        val timeLeft = binding.progressBar.progress
+
+        timer.cancel()
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Are you sure?")
+            .setMessage("Do you really want to quit this quiz in middle???")
+            .setPositiveButton("Quit") { dialog, _ ->
+
+                try {
+
+                    timer.cancel()
+                    requireActivity().onBackPressed()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+
+                setTimer(timeLeft.toLong())
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun showDialogForUsingStars(timeLeft: Int) {
