@@ -20,6 +20,8 @@ import com.rohitthebest.quizzed_aquizapp.R
 import com.rohitthebest.quizzed_aquizapp.dataStorage.preferenceDatastore.StoreScoreAndStar
 import com.rohitthebest.quizzed_aquizapp.databinding.FragmentQuizBinding
 import com.rohitthebest.quizzed_aquizapp.databinding.OptionsLayoutBinding
+import com.rohitthebest.quizzed_aquizapp.helperClasses.CustomQuizParameters
+import com.rohitthebest.quizzed_aquizapp.helperClasses.Difficulty
 import com.rohitthebest.quizzed_aquizapp.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.module.QuizApiViewModel
 import com.rohitthebest.quizzed_aquizapp.remote.Responses
@@ -119,46 +121,18 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
                     Type.ANY -> {
 
-                        GlobalScope.launch {
-                            delay(200)
-
-                            withContext(Dispatchers.Main) {
-
-                                val queryMap = HashMap<String, String>()
-                                queryMap["amount"] = 10.toString()
-                                queryMap["type"] = "multiple"
-
-                                startCustomQuiz(queryMap)
-                                totalQuestions = 10
-                            }
-                        }
+                        startQuizWithoutCustomization()
                     }
 
                     Type.CHOOSE_CATEGORY -> {
 
-                        val queryMap = HashMap<String, String>()
 
-                        queryMap["amount"] = quiz.numberOfQuestion.toString()
-                        queryMap["category"] = quiz.categoryNumber.toString()
-                        queryMap["type"] = "multiple"
-
-                        totalQuestions = quiz.numberOfQuestion?.toInt()!!
-
-                        startCustomQuiz(queryMap)
+                        startQuizWithSpecificCategory(quiz)
                     }
 
                     else -> {
 
-                        val queryMap = HashMap<String, String>()
-
-                        queryMap["amount"] = quiz?.numberOfQuestion.toString()
-                        queryMap["category"] = quiz?.categoryNumber.toString()
-                        queryMap["difficulty"] = quiz?.difficulty.toString()
-                        queryMap["type"] = "multiple"
-
-                        totalQuestions = quiz?.numberOfQuestion?.toInt()!!
-
-                        startCustomQuiz(queryMap)
+                        startCustomQuiz(quiz)
                     }
                 }
             }
@@ -168,7 +142,64 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         }
     }
 
-    private fun startCustomQuiz(queryMap: java.util.HashMap<String, String>) {
+    private fun startQuizWithoutCustomization() {
+
+        GlobalScope.launch {
+            delay(200)
+
+            withContext(Dispatchers.Main) {
+
+                val queryMap = HashMap<String, String>()
+                queryMap["amount"] = 10.toString()
+                queryMap["type"] = "multiple"
+                totalQuestions = 10
+
+                startQuiz(queryMap)
+            }
+        }
+
+    }
+
+    private fun startQuizWithSpecificCategory(quiz: CustomQuizParameters) {
+
+        val queryMap = HashMap<String, String>()
+
+        queryMap["amount"] = quiz.numberOfQuestion.toString()
+        queryMap["category"] = quiz.categoryNumber.toString()
+        queryMap["type"] = "multiple"
+
+        totalQuestions = quiz.numberOfQuestion?.toInt()!!
+
+        startQuiz(queryMap)
+    }
+
+    private fun startCustomQuiz(quiz: CustomQuizParameters?) {
+
+        val queryMap = HashMap<String, String>()
+
+        queryMap["amount"] = quiz?.numberOfQuestion.toString()
+
+        queryMap["difficulty"] = when (quiz?.difficulty) {
+
+            Difficulty.EASY -> "easy"
+
+            Difficulty.MEDIUM -> "medium"
+
+            else -> "hard"
+        }
+        queryMap["type"] = "multiple"
+
+        if (quiz?.categoryNumber != "-1") {
+
+            queryMap["category"] = quiz?.categoryNumber.toString()
+        }
+
+        totalQuestions = quiz?.numberOfQuestion?.toInt()!!
+
+        startQuiz(queryMap)
+    }
+
+    private fun startQuiz(queryMap: java.util.HashMap<String, String>) {
 
         GlobalScope.launch {
             delay(200)
@@ -228,7 +259,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
             binding.backBtn.id -> {
 
-                //ask for confirmation in dialog
+                //todo : ask for confirmation in dialog
                 try {
 
                     timer.cancel()

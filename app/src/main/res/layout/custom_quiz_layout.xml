@@ -43,14 +43,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <NumberPicker
-                android:id="@+id/difficultyNumberPicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/divider8"
-                app:layout_constraintTop_toTopOf="@+id/numberOfQuestionsNumberPicker" />
-
             <View
                 android:id="@+id/divider9"
                 android:layout_width="match_parent"
@@ -89,6 +81,35 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/divider8"
                 app:layout_constraintTop_toTopOf="@+id/textView7" />
+
+            <RadioGroup
+                android:id="@+id/difficultyRG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkedButton="@id/mediumRB"
+                app:layout_constraintBottom_toBottomOf="@+id/numberOfQuestionsNumberPicker"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/divider8"
+                app:layout_constraintTop_toTopOf="@+id/numberOfQuestionsNumberPicker">
+
+                <RadioButton
+                    android:id="@+id/easyRB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Easy" />
+
+                <RadioButton
+                    android:id="@+id/mediumRB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Medium" />
+
+                <RadioButton
+                    android:id="@+id/hardRB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hard" />
+            </RadioGroup>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
