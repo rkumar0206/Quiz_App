@@ -64,6 +64,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     private var star = 0
     private var correctAnswers = 0
     private var wrongAnswers = 0
+    private var isStarUsed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -231,11 +232,21 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
             binding.starBtn.id -> {
 
-                val timeLeft = binding.progressBar.progress
+                if (!isStarUsed) {
 
-                timer.cancel()
+                    val timeLeft = binding.progressBar.progress
 
-                showDialogForUsingStars(timeLeft)
+                    timer.cancel()
+
+                    showDialogForUsingStars(timeLeft)
+                } else {
+
+                    showToast(
+                        requireContext(),
+                        "You can use the star only once in a game!!!",
+                        Toast.LENGTH_LONG
+                    )
+                }
             }
 
             binding.nextBtn.id -> {
@@ -336,6 +347,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
             .setMessage("Use your 3 stars to get the answer.")
             .setPositiveButton("Use 3 stars") { dialog, _ ->
 
+                isStarUsed = true
                 star -= 3
                 saveData(oldHighScore, star)
 
