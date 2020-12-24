@@ -686,10 +686,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
             displayQuestion(questionNumber)
         } else {
 
-            showToast(requireContext(), "Your result")
-
             showResult()
-
 
             if (score > oldHighScore) {
 
@@ -716,7 +713,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
         }.positiveButton(text = "Start again") {
 
-            //getMessage()
+            resetValuesAndStartQuiz()
 
         }.negativeButton(text = "Go back") {
 
@@ -724,6 +721,25 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
         }
 
 
+    }
+
+    private fun resetValuesAndStartQuiz() {
+
+        questionList = ArrayList()
+        disableNextButton()
+        score = 0
+        questionNumber = -1
+        binding.scoreTV.text = "Score : 0"
+
+        binding.pleaseWaitCL.show()
+        binding.questionCL.hide()
+
+        resetTheColorBackgroundOfOptionsCardView()
+        correctAnswers = 0
+        wrongAnswers = 0
+        totalQuestions = 0
+
+        getMessage()
     }
 
     private fun saveData(highScore: Int, star: Int) {
