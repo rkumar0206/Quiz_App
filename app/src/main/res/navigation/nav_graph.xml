@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.rohitthebest.quizzed_aquizapp.ui.fragments.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_chooseCategoryFragment"
             app:destination="@id/chooseCategoryFragment" />
@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_homeFragment_to_customQuizFragment"
             app:destination="@id/customQuizFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_savedQuestionsFragment"
+            app:destination="@id/savedQuestionsFragment" />
     </fragment>
     <fragment
         android:id="@+id/chooseCategoryFragment"
@@ -43,9 +46,14 @@
         android:id="@+id/customQuizFragment"
         android:name="com.rohitthebest.quizzed_aquizapp.ui.fragments.CustomQuizFragment"
         android:label="fragment_custom_quiz"
-        tools:layout="@layout/fragment_custom_quiz" >
+        tools:layout="@layout/fragment_custom_quiz">
         <action
             android:id="@+id/action_customQuizFragment_to_quizFragment"
             app:destination="@id/quizFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/savedQuestionsFragment"
+        android:name="com.rohitthebest.quizzed_aquizapp.ui.fragments.SavedQuestionsFragment"
+        android:label="fragment_saved_questions"
+        tools:layout="@layout/fragment_saved_questions" />
 </navigation>

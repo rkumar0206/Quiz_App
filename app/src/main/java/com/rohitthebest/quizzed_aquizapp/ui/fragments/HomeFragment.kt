@@ -92,7 +92,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), View.OnClickListener {
 
             includeBinding.savedQuestionsOption.id -> {
 
-                //todo : open saved questions fragment
+                findNavController().navigate(R.id.action_homeFragment_to_savedQuestionsFragment)
             }
 
         }
