@@ -1,5 +1,6 @@
 package com.rohitthebest.quizzed_aquizapp.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,6 +74,7 @@ class SavedQuestionAdapter :
         )
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: SavedQuestionViewHolder, position: Int) {
 
         holder.binding.apply {
@@ -84,7 +86,7 @@ class SavedQuestionAdapter :
                 incorrectAnwer1.text = it.incorrect_answers[0]
                 incorrectAnwer2.text = it.incorrect_answers[1]
                 incorrectAnwer3.text = it.incorrect_answers[2]
-                categoryNameTV.text = it.category
+                categoryNameTV.text = "Category : ${it.category}"
             }
         }
     }

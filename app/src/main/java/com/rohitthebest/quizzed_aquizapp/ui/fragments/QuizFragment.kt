@@ -26,6 +26,7 @@ import com.rohitthebest.quizzed_aquizapp.helperClasses.Type
 import com.rohitthebest.quizzed_aquizapp.module.QuizApiViewModel
 import com.rohitthebest.quizzed_aquizapp.remote.Responses
 import com.rohitthebest.quizzed_aquizapp.remote.model.Result
+import com.rohitthebest.quizzed_aquizapp.ui.viewModels.QuestionViewModel
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.changeColor
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.disable
 import com.rohitthebest.quizzed_aquizapp.util.ExtensionFunctions.Companion.enable
@@ -48,6 +49,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
     private val binding get() = _binding!!
 
     private val quizViewModel: QuizApiViewModel by viewModels()
+    private val savedQuestionViewModel: QuestionViewModel by viewModels()
 
     private lateinit var optionsBinding: OptionsLayoutBinding
 
@@ -264,8 +266,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
 
             binding.saveBtn.id -> {
 
-                showToast(requireContext(), "Save btn pressed")
-                //todo : save question to database
+                saveQuestionInDatabase(questionList[questionNumber])
             }
 
             binding.backBtn.id -> {
@@ -331,6 +332,19 @@ class QuizFragment : Fragment(R.layout.fragment_quiz), View.OnClickListener {
                 setNextButtonTimer()
             }
         }
+    }
+
+    private fun saveQuestionInDatabase(question: Result) {
+
+        try {
+
+            savedQuestionViewModel.insertQuestion(question)
+            showToast(requireContext(), "Question saved")
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+        }
+
     }
 
     private fun askForConfirmation() {
