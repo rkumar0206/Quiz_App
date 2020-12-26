@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.rohitthebest.quizzed_aquizapp.R
 import com.rohitthebest.quizzed_aquizapp.adapters.SavedQuestionAdapter
 import com.rohitthebest.quizzed_aquizapp.databinding.FragmentSavedQuestionsBinding
@@ -92,7 +93,7 @@ class SavedQuestionsFragment : Fragment(R.layout.fragment_saved_questions),
 
     override fun onItemClick(question: Result) {
 
-        showToast(requireContext(), question.question)
+        //showToast(requireContext(), question.question)
     }
 
     override fun onCopyClicked(question: Result) {
@@ -102,7 +103,14 @@ class SavedQuestionsFragment : Fragment(R.layout.fragment_saved_questions),
 
     override fun onDeleteClick(question: Result) {
 
-        showToast(requireContext(), "OnDelete Clicked")
+        viewModel.deleteQuestion(question)
+
+        Snackbar.make(binding.savedQuestionCL, "Question Deleted", Snackbar.LENGTH_LONG)
+            .setAction("Undo") {
+
+                viewModel.insertQuestion(question)
+            }
+            .show()
     }
 
     private fun showProgressBar() {

@@ -20,7 +20,7 @@ class SavedQuestionAdapter :
 
         init {
 
-            binding.savedQuestionParentView.setOnClickListener(this)
+            //binding.savedQuestionParentView.setOnClickListener(this)
             binding.copyBtn.setOnClickListener(this)
             binding.deleteBtn.setOnClickListener(this)
         }
@@ -29,13 +29,13 @@ class SavedQuestionAdapter :
 
             when (v?.id) {
 
-                binding.savedQuestionParentView.id -> {
+                /* binding.savedQuestionParentView.id -> {
 
-                    if (checkForNull(absoluteAdapterPosition)) {
+                     if (checkForNull(absoluteAdapterPosition)) {
 
-                        mListener!!.onItemClick(getItem(absoluteAdapterPosition))
-                    }
-                }
+                         mListener!!.onItemClick(getItem(absoluteAdapterPosition))
+                     }
+                 }*/
 
                 binding.copyBtn.id -> {
 
