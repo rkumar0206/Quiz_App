@@ -6,4 +6,5 @@ object Constants {
 
     const val HIGH_SCORE_KEY = "highscorekeyksnvkjhsvijvabj"
     const val STAR_KEY = "starkeyksnvkzdchjvasndsjjnvijvabj"
+    const val QUESTION_DATABASE_NAME = "questionDatabase.db"
 }
