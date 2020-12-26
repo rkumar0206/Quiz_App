@@ -75,6 +75,18 @@ class SavedQuestionAdapter :
 
     override fun onBindViewHolder(holder: SavedQuestionViewHolder, position: Int) {
 
+        holder.binding.apply {
+
+            getItem(position)?.let {
+
+                displayQuestionTV.text = it.question
+                correctAnswerTV.text = it.correct_answer
+                incorrectAnwer1.text = it.incorrect_answers[0]
+                incorrectAnwer2.text = it.incorrect_answers[1]
+                incorrectAnwer3.text = it.incorrect_answers[2]
+                categoryNameTV.text = it.category
+            }
+        }
     }
 
     interface OnClickListener {
